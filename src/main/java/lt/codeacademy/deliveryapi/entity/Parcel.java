@@ -21,6 +21,5 @@ public class Parcel {
     private Status status;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "courier_id")
     private Courier courier;
 }
