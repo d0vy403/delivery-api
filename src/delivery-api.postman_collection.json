@@ -39,7 +39,7 @@
 			"response": []
 		},
 		{
-			"name": "delete product",
+			"name": "get parcel by courier id",
 			"request": {
 				"method": "GET",
 				"header": []

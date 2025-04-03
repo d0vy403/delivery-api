@@ -1,15 +1,15 @@
 package lt.codeacademy.deliveryapi.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lt.codeacademy.deliveryapi.dto.CreateParcelRequest;
+import lt.codeacademy.deliveryapi.dto.GetParcelResponse;
+import lt.codeacademy.deliveryapi.dto.UpdateParcelStatusRequest;
 import lt.codeacademy.deliveryapi.entity.Parcel;
-import lt.codeacademy.deliveryapi.entity.Status;
 import lt.codeacademy.deliveryapi.service.ParcelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/parcels")
@@ -19,34 +19,25 @@ public class ParcelController {
   private final ParcelService parcelService;
 
   @PostMapping
-  public ResponseEntity<Parcel> addParcel(@RequestBody Parcel parcel) {
-    Parcel newParcel = parcelService.addParcel(parcel);
-    return new ResponseEntity<>(newParcel, HttpStatus.CREATED);
+  public ResponseEntity<GetParcelResponse> addParcel(@RequestBody CreateParcelRequest request) {
+    GetParcelResponse response = parcelService.addParcel(request);
+    return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
 
   @GetMapping
-  public ResponseEntity<List<Parcel>> getAllParcels() {
+  public ResponseEntity<List<GetParcelResponse>> getAllParcels() {
     return new ResponseEntity<>(parcelService.getAllParcels(), HttpStatus.OK);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Parcel> getParcelById(@PathVariable Long id) {
-    try {
-      Parcel parcel = parcelService.getParcelById(id);
-      return new ResponseEntity<>(parcel, HttpStatus.OK);
-    } catch (HttpClientErrorException.NotFound e) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+  public ResponseEntity<GetParcelResponse> getParcelById(@PathVariable Long id) {
+    return new ResponseEntity<>(parcelService.getParcelById(id), HttpStatus.OK);
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<Parcel> updateParcelStatus(@PathVariable Long id, @RequestBody Status status) {
-    try {
-      Parcel updatedParcel = parcelService.updateParcelStatus(id, status);
-      return new ResponseEntity<>(updatedParcel, HttpStatus.OK);
-    } catch (HttpClientErrorException.NotFound e) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+  public ResponseEntity<GetParcelResponse> updateParcelStatus(
+      @PathVariable Long id, @RequestBody UpdateParcelStatusRequest request) {
+    return new ResponseEntity<>(parcelService.updateParcelStatus(id, request), HttpStatus.OK);
   }
 
   @DeleteMapping("/{id}")
